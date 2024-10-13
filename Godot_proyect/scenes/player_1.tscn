@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3 uid="uid://bsanlicbhupcf"]
+
+[ext_resource type="Texture2D" uid="uid://chm7abegakfxy" path="res://assets/tankss.png" id="2_5g2l0"]
+[ext_resource type="Script" path="res://scenes/player_1.gd" id="2_cxkkl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_46dwa"]
+size = Vector2(89.0389, 82.9467)
+
+[node name="Player1" type="CharacterBody2D"]
+script = ExtResource("2_cxkkl")
+speed = 200
+rotation_speed = 1.0
+gun_cooldown = 0.4
+health = 100
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.520088, 0.546916)
+shape = SubResource("RectangleShape2D_46dwa")
+
+[node name="Body" type="Sprite2D" parent="."]
+texture = ExtResource("2_5g2l0")
+region_enabled = true
+region_rect = Rect2(0, 264, 84, 84)
+
+[node name="Turret" type="Sprite2D" parent="."]
+texture = ExtResource("2_5g2l0")
+offset = Vector2(20, 0)
+region_enabled = true
+region_rect = Rect2(199, 36, 60, 24)
+
+[node name="Muzzle" type="Marker2D" parent="Turret"]
+position = Vector2(55, 0)
+rotation = 2.31367
+
+[node name="GunTimer" type="Timer" parent="."]

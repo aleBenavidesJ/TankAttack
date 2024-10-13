@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8dt1d7t5ctc4"]
+
+[ext_resource type="Texture2D" uid="uid://chm7abegakfxy" path="res://assets/tankss.png" id="1_upa35"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6yfsf"]
+size = Vector2(82, 83)
+
+[node name="Player3" type="Node2D"]
+
+[node name="Tank1" type="CharacterBody2D" parent="."]
+position = Vector2(0, -100)
+rotation = 3.14159
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tank1"]
+position = Vector2(1.5, 0)
+shape = SubResource("RectangleShape2D_6yfsf")
+
+[node name="Body" type="Sprite2D" parent="Tank1"]
+texture = ExtResource("1_upa35")
+region_enabled = true
+region_rect = Rect2(84, 261, 80, 85)
+
+[node name="Turret" type="Sprite2D" parent="Tank1"]
+position = Vector2(-3, 1)
+texture = ExtResource("1_upa35")
+offset = Vector2(20, 0)
+region_enabled = true
+region_rect = Rect2(0, 13, 60, 24)
+
+[node name="Muzzle" type="Marker2D" parent="Tank1/Turret"]
+position = Vector2(55, 0)
+
+[node name="Tank2" type="CharacterBody2D" parent="."]
+position = Vector2(0, 100)
+rotation = 3.14159
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tank2"]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_6yfsf")
+
+[node name="Body" type="Sprite2D" parent="Tank2"]
+texture = ExtResource("1_upa35")
+region_enabled = true
+region_rect = Rect2(268, 186, 80, 76)
+
+[node name="Turret" type="Sprite2D" parent="Tank2"]
+position = Vector2(-3, 1)
+texture = ExtResource("1_upa35")
+offset = Vector2(20, 0)
+region_enabled = true
+region_rect = Rect2(452, 34, 60, 24)
+
+[node name="Muzzle" type="Marker2D" parent="Tank2/Turret"]
+position = Vector2(55, 0)
