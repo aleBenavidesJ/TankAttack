@@ -141,6 +141,7 @@
     <ClCompile Include="GDExample.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player2.cpp" />
+    <ClCompile Include="Player3.cpp" />
     <ClCompile Include="register_types.cpp" />
     <ClCompile Include="VSTestGDnative.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="GDExample.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player2.h" />
+    <ClInclude Include="Player3.h" />
     <ClInclude Include="register_types.h" />
     <ClInclude Include="VSTestGDnative.h" />
   </ItemGroup>

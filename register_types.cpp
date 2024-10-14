@@ -5,7 +5,7 @@
 #include "GDExample.h"
 #include "Map.h"
 #include "Player2.h"
-
+#include "Player3.h"
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
@@ -22,6 +22,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<GDExample>();
 	ClassDB::register_class<Map>();
 	ClassDB::register_class<Player2>();
+	ClassDB::register_class<Player3>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

@@ -29,9 +29,11 @@ namespace godot {
         void print_adjacency_matrix();
         bool is_valid_position(const Vector2i& pos);
         bool is_connected(const Vector2i& from, const Vector2i& to);
-        Vector2i randomMovement(const Vector2i& start);
+        TypedArray<Vector2i> randomMovement(const Vector2i& start, const Vector2i& goal);
         TypedArray<Vector2i> movementPlayer1(const Vector2i& start, const Vector2i& goal);
+        TypedArray<Vector2i> movementPlayer2(const Vector2i& start, const Vector2i& goal);
         TypedArray<Vector2i> bfsPath(const Vector2i& start, const Vector2i& goal);
+        TypedArray<Vector2i> dijkstraPath(const Vector2i& start, const Vector2i& goal);
     };
 
 }

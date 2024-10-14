@@ -1,4 +1,4 @@
-#include "Player2.h"
+#include "Player3.h"
 #include "Map.h"
 #include <godot_cpp/classes/character_body2d.hpp>
 #include <godot_cpp/classes/collision_shape2d.hpp>
@@ -17,20 +17,20 @@
 
 using namespace godot;
 
-Player2::Player2() {
+Player3::Player3() {
     ground_tile_map = nullptr;
     selected_tank = nullptr;
-    player2 = nullptr;
+    player3 = nullptr;
     map_cpp_node = nullptr;
     path_index = -1;
 }
 
-Player2::~Player2() {}
+Player3::~Player3() {}
 
-void Player2::_ready() {
+void Player3::_ready() {
     map_cpp_node = Object::cast_to<Map>(get_parent()->get_parent());
     ground_tile_map = Object::cast_to<TileMap>(get_parent());
-    player2 = this;
+    player3 = this;
 
     if (!map_cpp_node) {
         UtilityFunctions::print("Error: Nodo 'map_cpp_node' no encontrado.");
@@ -39,20 +39,18 @@ void Player2::_ready() {
         UtilityFunctions::print("map_cpp_node asignado correctamente.");
     }
 
-    UtilityFunctions::print("Player1 encontrado: ", player2 != nullptr);
+    UtilityFunctions::print("Player2 encontrado: ", player3 != nullptr);
     //UtilityFunctions::print("Ground TileMap encontrado: ", ground_tile_map != nullptr);
     set_process(true);
 }
 
-void Player2::_process(double delta) {
+void Player3::_process(double delta) {
     if (selected_tank) {
         Vector2 mouse_position = get_global_mouse_position();
         Sprite2D* turret = cast_to<Sprite2D>(selected_tank->find_child("Turret"));
-
         if (turret) {
             turret->look_at(mouse_position);
         }
-
         if (path.size() > 0 && path_index >= 0) {
             Vector2i cell_position = path[path_index];
             Vector2 local_position = ground_tile_map->map_to_local(cell_position);
@@ -69,13 +67,12 @@ void Player2::_process(double delta) {
     }
 }
 
-
-void Player2::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("handle_left_click"), &Player2::handle_left_click);
-    ClassDB::bind_method(D_METHOD("handle_right_click"), &Player2::handle_right_click);
+void Player3::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("handle_left_click"), &Player3::handle_left_click);
+    ClassDB::bind_method(D_METHOD("handle_right_click"), &Player3::handle_right_click);
 }
 
-void Player2::_input(const Ref<InputEvent>& event) {
+void Player3::_input(const Ref<InputEvent>& event) {
     Ref<InputEventMouseButton> mouse_event = event;
     if (mouse_event.is_valid()) {
         if (mouse_event->is_pressed()) {
@@ -89,11 +86,11 @@ void Player2::_input(const Ref<InputEvent>& event) {
     }
 }
 
-void Player2::handle_left_click() {
+void Player3::handle_left_click() {
     Vector2 mouse_position = get_global_mouse_position();
     std::vector<CharacterBody2D*> tanks;
-    tanks.push_back(cast_to<CharacterBody2D>(player2->find_child("Tank1")));
-    tanks.push_back(cast_to<CharacterBody2D>(player2->find_child("Tank2")));
+    tanks.push_back(cast_to<CharacterBody2D>(player3->find_child("Tank3")));
+    tanks.push_back(cast_to<CharacterBody2D>(player3->find_child("Tank4")));
     CharacterBody2D* clicked_tank = nullptr;
 
     for (CharacterBody2D* tank : tanks) {
@@ -153,7 +150,7 @@ void Player2::handle_left_click() {
     }
 }*/
 
-void Player2::handle_right_click() {
+void Player3::handle_right_click() {
     if (selected_tank && map_cpp_node && ground_tile_map) {
         Vector2 mouse_position = get_global_mouse_position();
         Vector2 tank_global_position = selected_tank->get_global_position();
@@ -161,7 +158,7 @@ void Player2::handle_right_click() {
         Vector2i tank_grid_position = ground_tile_map->local_to_map(ground_tile_map->to_local(tank_global_position));
         UtilityFunctions::print("Posición del ratón en celdas: ", grid_position);
         UtilityFunctions::print("Posición del tanque en celdas: ", tank_grid_position);
-        path = map_cpp_node->movementPlayer1(tank_grid_position, grid_position);
+        path = map_cpp_node->movementPlayer2(tank_grid_position, grid_position);
         if (path.size() > 0) {
             UtilityFunctions::print("Camino encontrado.");
             path_index = path.size() - 1;
@@ -171,3 +168,12 @@ void Player2::handle_right_click() {
         }
     }
 }
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,5 @@
-#ifndef PLAYER2_H
-#define PLAYER2_H
+#ifndef PLAYER3_H
+#define PLAYER3_H
 
 #include <godot_cpp/classes/node2d.hpp>
 #include <godot_cpp/classes/character_body2d.hpp>
@@ -13,21 +13,21 @@
 
 using namespace godot;
 
-class Player2 : public Node2D {
-    GDCLASS(Player2, Node2D);
+class Player3 : public Node2D {
+    GDCLASS(Player3, Node2D);
 
 private:
     TileMap* ground_tile_map;
     CharacterBody2D* selected_tank;
     Map* map_cpp_node;
-    Node2D* player2;
+    Node2D* player3;
     Array path;
     int path_index;
     float speed;
 
 public:
-    Player2();
-    ~Player2();
+    Player3();
+    ~Player3();
 
     void _ready();
     void _process(double delta);

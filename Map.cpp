@@ -112,8 +112,6 @@ TypedArray<Vector2i> Map::bfsPath(const Vector2i& start, const Vector2i& goal) {
             UtilityFunctions::print("Camino encontrado.");
             return path;
         }
-
-        // Explorar vecinos
         for (const auto& dir : directions) {
             Vector2i neighbor = current + dir;
             if (is_valid_position(neighbor) && came_from.find(neighbor) == came_from.end()) {
@@ -127,38 +125,111 @@ TypedArray<Vector2i> Map::bfsPath(const Vector2i& start, const Vector2i& goal) {
     return path;
 }
 
+TypedArray<Vector2i> Map::randomMovement(const Vector2i& start, const Vector2i& goal) {
+    TypedArray<Vector2i> path;
+    Vector2i current_position = start;
+    Vector2i goal_position = goal;
+    UtilityFunctions::print("Posición inicial: ", current_position);
+    UtilityFunctions::print("Posición objetivo: ", goal_position);
 
-
-Vector2i Map::randomMovement(const Vector2i& start) {
-    Vector2i scaled_start = start;
+    if (current_position == goal_position) {
+        UtilityFunctions::print("Ya se encuentra en la posición objetivo.");
+        return path;
+    }
     std::vector<Vector2i> directions = { Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1) };
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, directions.size() - 1);
-    UtilityFunctions::print("Posici?n inicial: ", scaled_start);
+    for (int i = 0; i < 5; ++i) {
+        Vector2i direction_towards_goal = (goal_position - current_position).sign();
+        Vector2i new_position = current_position + direction_towards_goal;
 
-    for (int i = 0; i < 4; ++i) {
-        Vector2i new_pos = scaled_start + directions[dis(gen)];
-        UtilityFunctions::print("Intentando mover a la nueva posici?n: ", new_pos);
-        if (new_pos.x < 0 || new_pos.y < 0 || new_pos.x >= adjacency_matrix.size() || new_pos.y >= adjacency_matrix[0].size()) {
-            UtilityFunctions::print("Nueva posici?n fuera de los l?mites: ", new_pos);
-            continue;
-        }
-
-        if (is_valid_position(new_pos)) {
-            UtilityFunctions::print("Nueva posici?n v?lida encontrada: ", new_pos);
-            return new_pos;
+        if (is_valid_position(new_position)) {
+            UtilityFunctions::print("Moviéndose hacia la meta: ", new_position);
+            path.push_back(new_position);
+            current_position = new_position;
         }
         else {
-            UtilityFunctions::print("Nueva posici?n inv?lida: ", new_pos);
+            UtilityFunctions::print("Obstáculo encontrado, probando movimiento aleatorio.");
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(0, directions.size() - 1);
+
+            int random_index = dis(gen);
+            Vector2i random_direction = directions[random_index];
+            Vector2i random_position = current_position + random_direction;
+
+            if (is_valid_position(random_position)) {
+                UtilityFunctions::print("Moviéndose a una posición aleatoria válida: ", random_position);
+                path.push_back(random_position);
+                current_position = random_position;
+            }
+        }
+
+        if (current_position == goal_position) {
+            break;
         }
     }
-    UtilityFunctions::print("No se encontr? una posici?n v?lida. Manteniendo la posici?n actual: ", start);
-    return start;
+
+    if (path.size() == 0) {
+        UtilityFunctions::print("No se encontró una posición válida. Manteniendo la posición actual.");
+        path.push_back(current_position);
+    }
+
+    return path;
 }
 
-TypedArray<Vector2i> Map::movementPlayer1(const Vector2i& start, const Vector2i& goal)
-{
+TypedArray<Vector2i> Map::dijkstraPath(const Vector2i& start, const Vector2i& goal) {
+    TypedArray<Vector2i> path;
+    Vector2i start_tile = start;
+    Vector2i goal_tile = goal;
+
+    UtilityFunctions::print("Posición inicial Dijkstra (en tiles): ", start_tile);
+    UtilityFunctions::print("Posición objetivo Dijkstra (en tiles): ", goal_tile);
+
+    if (!is_valid_position(start_tile) || !is_valid_position(goal_tile)) {
+        UtilityFunctions::print("Posición inicial o objetivo no válidas.");
+        return path;
+    }
+    std::priority_queue<std::pair<int, Vector2i>, std::vector<std::pair<int, Vector2i>>, std::greater<std::pair<int, Vector2i>>> pq;
+    std::unordered_map<Vector2i, int, Vector2iHash> distance;
+    std::unordered_map<Vector2i, Vector2i, Vector2iHash> came_from;
+    distance[start_tile] = 0;
+    pq.push({ 0, start_tile });
+    came_from[start_tile] = start_tile;
+
+    std::vector<Vector2i> directions = { Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1) };
+
+    while (!pq.empty()) {
+        auto [current_distance, current] = pq.top();
+        pq.pop();
+        if (current == goal_tile) {
+            while (current != start_tile) {
+                path.push_back(current);
+                current = came_from[current];
+            }
+            path.push_back(start_tile);
+            UtilityFunctions::print("Camino encontrado (Dijkstra).");
+            return path;
+        }
+
+        for (const auto& dir : directions) {
+            Vector2i neighbor = current + dir;
+            int weight = 1;
+
+            if (is_valid_position(neighbor)) {
+                int new_distance = current_distance + weight;
+                if (distance.find(neighbor) == distance.end() || new_distance < distance[neighbor]) {
+                    distance[neighbor] = new_distance;
+                    pq.push({ new_distance, neighbor });
+                    came_from[neighbor] = current;
+                }
+            }
+        }
+    }
+
+    UtilityFunctions::print("No se encontró camino (Dijkstra).");
+    return path;
+}
+
+TypedArray<Vector2i> Map::movementPlayer1(const Vector2i& start, const Vector2i& goal) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 1);
@@ -169,6 +240,21 @@ TypedArray<Vector2i> Map::movementPlayer1(const Vector2i& start, const Vector2i&
     }
     else {
         UtilityFunctions::print("Using Random Movement");
-        return { randomMovement(start) };
+        return randomMovement(start, goal);
+    }
+}
+
+TypedArray<Vector2i> Map::movementPlayer2(const Vector2i& start, const Vector2i& goal) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 4);
+
+    if (dis(gen) < 4) {
+        UtilityFunctions::print("Using Dijkstra");
+        return dijkstraPath(start, goal);
+    }
+    else {
+        UtilityFunctions::print("Using Random Movement");
+        return randomMovement(start, goal);
     }
 }
