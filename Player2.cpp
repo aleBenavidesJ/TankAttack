@@ -69,6 +69,33 @@ void Player2::_process(double delta) {
     }
 }
 
+/*void Player2::_process(double delta) {
+    if (selected_tank) {
+        Vector2 mouse_position = get_global_mouse_position();
+        Sprite2D* turret = cast_to<Sprite2D>(selected_tank->find_child("Turret"));
+        if (turret) {
+            turret->look_at(mouse_position);
+        }
+        if (path.size() > 0 && path_index >= 0) {
+            Vector2i cell_position = path[path_index];
+            Vector2 local_position = ground_tile_map->map_to_local(cell_position);
+            Vector2 target_position = ground_tile_map->to_global(local_position);
+            Vector2 current_position = selected_tank->get_global_position();
+            Vector2 direction = (target_position - current_position).normalized();
+            float target_rotation = direction.angle();
+            float current_rotation = selected_tank->get_rotation();
+            float rotation_speed = 2.0f;
+            float new_rotation = current_rotation + Math::lerp_angle(current_rotation, target_rotation, static_cast<float>(rotation_speed * delta));
+            selected_tank->set_rotation(new_rotation);
+            float speed = 800.0f;
+            selected_tank->set_velocity(direction * speed);
+            selected_tank->move_and_slide();
+            if (current_position.distance_to(target_position) < 5.0f) {
+                path_index--;
+            }
+        }
+    }
+}*/
 
 void Player2::_bind_methods() {
     ClassDB::bind_method(D_METHOD("handle_left_click"), &Player2::handle_left_click);

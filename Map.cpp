@@ -12,15 +12,13 @@ void Map::_bind_methods()
 
 void Map::_ready()
 {
-
-    UtilityFunctions::print("Nodos hijos de Map: ", get_children());
     ground_tile_map = Object::cast_to<TileMap>(find_child("Ground"));
     if (!ground_tile_map) {
         UtilityFunctions::print("Ground TileMap node not found!");
         return;
     }
 
-    Vector2i map_size = ground_tile_map->get_used_rect().size;
+    map_size = ground_tile_map->get_used_rect().size;
     if (map_size.x <= 0 || map_size.y <= 0) {
         UtilityFunctions::print("Invalid map size!");
         return;
@@ -128,51 +126,30 @@ TypedArray<Vector2i> Map::bfsPath(const Vector2i& start, const Vector2i& goal) {
 TypedArray<Vector2i> Map::randomMovement(const Vector2i& start, const Vector2i& goal) {
     TypedArray<Vector2i> path;
     Vector2i current_position = start;
-    Vector2i goal_position = goal;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> x_dis(0, map_size.x - 1);
+    std::uniform_int_distribution<> y_dis(0, map_size.y - 1);
+    Vector2i random_goal;
+    do {
+        random_goal = Vector2i(x_dis(gen), y_dis(gen));
+    } while (random_goal == current_position || !is_valid_position(random_goal));
     UtilityFunctions::print("Posición inicial: ", current_position);
-    UtilityFunctions::print("Posición objetivo: ", goal_position);
-
-    if (current_position == goal_position) {
-        UtilityFunctions::print("Ya se encuentra en la posición objetivo.");
-        return path;
-    }
-    std::vector<Vector2i> directions = { Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1) };
-    for (int i = 0; i < 5; ++i) {
-        Vector2i direction_towards_goal = (goal_position - current_position).sign();
+    UtilityFunctions::print("Nueva posición objetivo aleatoria: ", random_goal);
+    while (current_position != random_goal) {
+        Vector2i direction_towards_goal = (random_goal - current_position).sign();
         Vector2i new_position = current_position + direction_towards_goal;
 
         if (is_valid_position(new_position)) {
-            UtilityFunctions::print("Moviéndose hacia la meta: ", new_position);
+            UtilityFunctions::print("Moviéndose hacia la posición objetivo aleatoria: ", new_position);
             path.push_back(new_position);
             current_position = new_position;
         }
         else {
-            UtilityFunctions::print("Obstáculo encontrado, probando movimiento aleatorio.");
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dis(0, directions.size() - 1);
-
-            int random_index = dis(gen);
-            Vector2i random_direction = directions[random_index];
-            Vector2i random_position = current_position + random_direction;
-
-            if (is_valid_position(random_position)) {
-                UtilityFunctions::print("Moviéndose a una posición aleatoria válida: ", random_position);
-                path.push_back(random_position);
-                current_position = random_position;
-            }
-        }
-
-        if (current_position == goal_position) {
+            UtilityFunctions::print("Meta aleatoria inválida, manteniendo la posición actual.");
             break;
         }
     }
-
-    if (path.size() == 0) {
-        UtilityFunctions::print("No se encontró una posición válida. Manteniendo la posición actual.");
-        path.push_back(current_position);
-    }
-
     return path;
 }
 

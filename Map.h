@@ -19,6 +19,7 @@ namespace godot {
         GDCLASS(Map, Node2D)
 
     private:
+        Vector2i map_size;
         TileMap* ground_tile_map;
         std::vector<std::vector<std::vector<int>>> adjacency_matrix;
 
